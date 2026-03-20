@@ -1,35 +1,79 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Russian Vocab Drill</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EJERCICIO TIPO 1 RUSO</title>
+    <style>
+        body { background: #1a1b1e; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .card { background: #2d2e31; padding: 25px; border-radius: 20px; border: 1px solid #3f4043; width: 100%; max-width: 450px; text-align: center; }
+        .phrase { font-size: 1.6rem; font-weight: bold; color: #00d4ff; margin: 20px 0; }
+        .btn-audio { background: #ffbd2e; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; margin-bottom: 20px; }
+        .options { display: grid; gap: 10px; }
+        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; }
+        .correct { background: #27c93f !important; }
+        .wrong { background: #ff5f56 !important; }
+        .progress-container { background: #333; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        #bar { background: #27c93f; width: 0%; height: 100%; transition: 0.3s; }
+    </style>
 </head>
 <body>
-
-<div class="memrise-container">
-  <div class="stats-panel">
-    <div class="progress-bar">
-      <div id="progress"></div>
+    <div class="card">
+        <div class="progress-container"><div id="bar"></div></div>
+        <div>Pts: <span id="pts">0</span></div>
+        <p style="color: #888; font-size: 0.8rem;">TRANSLATE THIS PHRASE</p>
+        <div id="display" class="phrase">Cargando...</div>
+        <button class="btn-audio" onclick="say()">🔊</button>
+        <div id="btns" class="options"></div>
     </div>
-    <div class="score">Pts: <span id="points">0</span></div>
-  </div>
 
-  <div class="flashcard">
-    <div class="header">TRANSLATE THIS PHRASE</div>
-    
-    <div class="phrase-container">
-      <div id="word-to-test" class="phrase-display">...</div>
-      <button id="audio-btn" class="icon-btn">
-        <span class="icon">🔊</span>
-      </button>
-    </div>
-    
-    <div id="options-container" class="options-grid"></div>
-  </div>
+<script>
+    const data = [
+        { r: "Я бы хотел заказать столик на двоих.", s: "Me gustaría reservar una mesa para dos." },
+        { r: "К сожалению, я не смогу прийти на встречу.", s: "Lamentablemente, no podré ir a la reunión." },
+        { r: "Мы с друзьями собираемся поехать за город.", s: "Mis amigos y yo planeamos ir fuera de la ciudad." }
+    ];
+    let idx = 0, score = 0;
 
-  <div id="feedback" class="feedback-msg"></div>
-</div>
+    function say(text = null, cb = null) {
+        const t = text || data[idx].r;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(t);
+        u.lang = 'ru-RU'; u.rate = 0.75;
+        if(cb) u.onend = () => setTimeout(cb, 600);
+        window.speechSynthesis.speak(u);
+    }
 
+    function load() {
+        const item = data[idx];
+        document.getElementById('display').innerText = item.r;
+        const opts = [item.s, ...data.filter(x => x.s !== item.s).map(x => x.s).slice(0, 3)].sort(() => Math.random() - 0.5);
+        const div = document.getElementById('btns');
+        div.innerHTML = "";
+        opts.forEach(o => {
+            const b = document.createElement('button');
+            b.className = 'opt'; b.innerText = o;
+            b.onclick = () => {
+                document.querySelectorAll('.opt').forEach(x => x.disabled = true);
+                if(o === item.s) {
+                    b.classList.add('correct'); score += 10;
+                    document.getElementById('pts').innerText = score;
+                    say(item.r, next);
+                } else {
+                    b.classList.add('wrong'); setTimeout(next, 2000);
+                }
+            };
+            div.appendChild(b);
+        });
+    }
+
+    function next() {
+        idx = (idx + 1) % data.length;
+        document.getElementById('bar').style.width = (idx / data.length * 100) + "%";
+        load();
+    }
+
+    window.onload = load;
+</script>
 </body>
 </html>
