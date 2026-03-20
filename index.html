@@ -8,11 +8,12 @@
         body { background: #1a1b1e; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
         .card { background: #2d2e31; padding: 25px; border-radius: 20px; border: 1px solid #3f4043; width: 100%; max-width: 450px; text-align: center; }
         .phrase { font-size: 1.6rem; font-weight: bold; color: #00d4ff; margin: 20px 0; }
-        .btn-audio { background: #ffbd2e; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; margin-bottom: 20px; }
+        .btn-audio { background: #ffbd2e; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; margin-bottom: 20px; transition: transform 0.1s; }
+        .btn-audio:active { transform: scale(0.9); }
         .options { display: grid; gap: 10px; }
-        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; }
-        .correct { background: #27c93f !important; }
-        .wrong { background: #ff5f56 !important; }
+        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .correct { background: #27c93f !important; border-color: #5ff97e !important; }
+        .wrong { background: #ff5f56 !important; border-color: #ff8e89 !important; }
         .progress-container { background: #333; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
         #bar { background: #27c93f; width: 0%; height: 100%; transition: 0.3s; }
     </style>
@@ -21,46 +22,63 @@
     <div class="card">
         <div class="progress-container"><div id="bar"></div></div>
         <div>Pts: <span id="pts">0</span></div>
-        <p style="color: #888; font-size: 0.8rem;">TRANSLATE THIS PHRASE</p>
+        <p style="color: #888; font-size: 0.8rem; letter-spacing: 1px;">TRANSLATE THIS PHRASE</p>
         <div id="display" class="phrase">Cargando...</div>
         <button class="btn-audio" onclick="say()">🔊</button>
         <div id="btns" class="options"></div>
     </div>
 
 <script>
+    // Frases cortas extraídas del video "Easy Russian Story"
     const data = [
-        { r: "Я бы хотел заказать столик на двоих.", s: "Me gustaría reservar una mesa para dos." },
-        { r: "К сожалению, я не смогу прийти на встречу.", s: "Lamentablemente, no podré ir a la reunión." },
-        { r: "Мы с друзьями собираемся поехать за город.", s: "Mis amigos y yo planeamos ir fuera de la ciudad." }
+        { r: "В театре нужно сидеть.", s: "En el teatro hay que estar sentado." },
+        { r: "В театре нельзя бегать.", s: "En el teatro no se puede correr." },
+        { r: "В театре нельзя прыгать.", s: "En el teatro no se puede saltar." },
+        { r: "На рок-концерте можно всё.", s: "En el concierto de rock se puede todo." },
+        { r: "Нельзя быть скучным.", s: "No se puede ser aburrido." },
+        { r: "Нужно надеть костюм.", s: "Hay que ponerse un traje." },
+        { r: "Можно есть мороженое.", s: "Se puede comer helado." },
+        { r: "Можно делать селфи.", s: "Se pueden hacer selfies." }
     ];
+
     let idx = 0, score = 0;
 
     function say(text = null, cb = null) {
         const t = text || data[idx].r;
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(t);
-        u.lang = 'ru-RU'; u.rate = 0.75;
-        if(cb) u.onend = () => setTimeout(cb, 600);
+        u.lang = 'ru-RU'; 
+        u.rate = 0.75; // Velocidad pausada para aprendizaje
+        if(cb) u.onend = () => setTimeout(cb, 800);
         window.speechSynthesis.speak(u);
     }
 
     function load() {
         const item = data[idx];
         document.getElementById('display').innerText = item.r;
-        const opts = [item.s, ...data.filter(x => x.s !== item.s).map(x => x.s).slice(0, 3)].sort(() => Math.random() - 0.5);
+        
+        // Generar opciones (la correcta + 2 aleatorias de la lista)
+        const otherOptions = data.filter(x => x.s !== item.s).map(x => x.s);
+        const shuffledOthers = otherOptions.sort(() => Math.random() - 0.5).slice(0, 2);
+        const opts = [item.s, ...shuffledOthers].sort(() => Math.random() - 0.5);
+
         const div = document.getElementById('btns');
         div.innerHTML = "";
+        
         opts.forEach(o => {
             const b = document.createElement('button');
-            b.className = 'opt'; b.innerText = o;
+            b.className = 'opt'; 
+            b.innerText = o;
             b.onclick = () => {
                 document.querySelectorAll('.opt').forEach(x => x.disabled = true);
                 if(o === item.s) {
-                    b.classList.add('correct'); score += 10;
+                    b.classList.add('correct'); 
+                    score += 10;
                     document.getElementById('pts').innerText = score;
-                    say(item.r, next);
+                    say(item.r, next); // Pronuncia antes de pasar a la siguiente
                 } else {
-                    b.classList.add('wrong'); setTimeout(next, 2000);
+                    b.classList.add('wrong'); 
+                    setTimeout(next, 1500);
                 }
             };
             div.appendChild(b);
@@ -68,7 +86,12 @@
     }
 
     function next() {
-        idx = (idx + 1) % data.length;
+        idx++;
+        if (idx >= data.length) {
+            // Reiniciar al completar todas las frases
+            idx = 0;
+            alert("¡Buen trabajo! Has terminado las frases del video.");
+        }
         document.getElementById('bar').style.width = (idx / data.length * 100) + "%";
         load();
     }
