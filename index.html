@@ -1,44 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EJERCICIO TIPO 1 RUSO</title>
+    <title>PRÁCTICA DE VOCABULARIO RUSO</title>
     <style>
         body { background: #1a1b1e; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .card { background: #2d2e31; padding: 25px; border-radius: 20px; border: 1px solid #3f4043; width: 100%; max-width: 450px; text-align: center; }
-        .phrase { font-size: 1.6rem; font-weight: bold; color: #00d4ff; margin: 20px 0; }
+        .card { background: #2d2e31; padding: 25px; border-radius: 20px; border: 1px solid #3f4043; width: 100%; max-width: 500px; text-align: center; }
+        .phrase { font-size: 1.4rem; font-weight: bold; color: #00d4ff; margin: 20px 0; line-height: 1.4; }
         .btn-audio { background: #ffbd2e; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; margin-bottom: 20px; transition: transform 0.1s; }
         .btn-audio:active { transform: scale(0.9); }
         .options { display: grid; gap: 10px; }
-        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; text-align: left; }
+        .opt:hover { background: #4a4b4e; }
         .correct { background: #27c93f !important; border-color: #5ff97e !important; }
         .wrong { background: #ff5f56 !important; border-color: #ff8e89 !important; }
         .progress-container { background: #333; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
         #bar { background: #27c93f; width: 0%; height: 100%; transition: 0.3s; }
+        #pts-container { margin-bottom: 10px; font-weight: bold; color: #ffbd2e; }
     </style>
 </head>
 <body>
     <div class="card">
         <div class="progress-container"><div id="bar"></div></div>
-        <div>Pts: <span id="pts">0</span></div>
-        <p style="color: #888; font-size: 0.8rem; letter-spacing: 1px;">TRANSLATE THIS PHRASE</p>
+        <div id="pts-container">Pts: <span id="pts">0</span></div>
+        <p style="color: #888; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Traduce esta oración</p>
         <div id="display" class="phrase">Cargando...</div>
         <button class="btn-audio" onclick="say()">🔊</button>
         <div id="btns" class="options"></div>
     </div>
 
 <script>
-    // Frases cortas extraídas del video "Easy Russian Story"
+    // Datos actualizados con tus oraciones personalizadas
     const data = [
-        { r: "В театре нужно сидеть.", s: "En el teatro hay que estar sentado." },
-        { r: "В театре нельзя бегать.", s: "En el teatro no se puede correr." },
-        { r: "В театре нельзя прыгать.", s: "En el teatro no se puede saltar." },
-        { r: "На рок-концерте можно всё.", s: "En el concierto de rock se puede todo." },
-        { r: "Нельзя быть скучным.", s: "No se puede ser aburrido." },
-        { r: "Нужно надеть костюм.", s: "Hay que ponerse un traje." },
-        { r: "Можно есть мороженое.", s: "Se puede comer helado." },
-        { r: "Можно делать селфи.", s: "Se pueden hacer selfies." }
+        { r: "Моя семья живёт в Лиме.", s: "Mi familia vive en Lima." },
+        { r: "Твоя сестра учится в колледже?", s: "¿Tu hermana estudia en el colegio?" },
+        { r: "У меня есть старший брат.", s: "Tengo un hermano mayor." },
+        { r: "Мой отец любит пить кофе.", s: "Mi padre ama beber café." },
+        { r: "Директор сейчас на работе.", s: "El director está ahora en el trabajo." },
+        { r: "Наш учитель очень умный.", s: "Nuestro profesor es muy inteligente." },
+        { r: "Эта школа очень старая.", s: "Esta escuela es muy antigua." },
+        { r: "Завтра у нас важный урок.", s: "Mañana tenemos una clase importante." },
+        { r: "История — мой любимый предмет.", s: "La historia es mi materia favorita." },
+        { r: "Сегодня у меня трудный экзамен.", s: "Hoy tengo un examen difícil." },
+        { r: "Москва — красивый город.", s: "Moscú es una ciudad hermosa." },
+        { r: "Я иду в продуктовый магазин.", s: "Voy a la tienda de comestibles." },
+        { r: "Мой дом — твоя крепость.", s: "Mi casa es tu fortaleza." },
+        { r: "Новый телефон стоит дорого.", s: "Un teléfono nuevo cuesta caro." },
+        { r: "У меня есть деньги на обед.", s: "Tengo dinero para el almuerzo." },
+        { r: "У него сегодня плохое настроение.", s: "Él tiene hoy un mal estado de ánimo." },
+        { r: "В её глазах видна грусть.", s: "En sus ojos se ve tristeza." },
+        { r: "У неё очень необычная внешность.", s: "Ella tiene una apariencia muy inusual." },
+        { r: "У туриста сильный акцент.", s: "El turista tiene un acento fuerte." },
+        { r: "Это была весёлая свадьба.", s: "Fue una boda divertida." },
+        { r: "Этот старый отель — просто дыра.", s: "Este hotel viejo es simplemente un agujero." },
+        { r: "Эта музыка — полный отстой.", s: "Esta música es una basura total." }
     ];
 
     let idx = 0, score = 0;
@@ -48,8 +64,8 @@
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(t);
         u.lang = 'ru-RU'; 
-        u.rate = 0.75; // Velocidad pausada para aprendizaje
-        if(cb) u.onend = () => setTimeout(cb, 800);
+        u.rate = 0.8; 
+        if(cb) u.onend = () => setTimeout(cb, 1000);
         window.speechSynthesis.speak(u);
     }
 
@@ -57,7 +73,7 @@
         const item = data[idx];
         document.getElementById('display').innerText = item.r;
         
-        // Generar opciones (la correcta + 2 aleatorias de la lista)
+        // Generar opciones (la correcta + 2 aleatorias)
         const otherOptions = data.filter(x => x.s !== item.s).map(x => x.s);
         const shuffledOthers = otherOptions.sort(() => Math.random() - 0.5).slice(0, 2);
         const opts = [item.s, ...shuffledOthers].sort(() => Math.random() - 0.5);
@@ -75,9 +91,10 @@
                     b.classList.add('correct'); 
                     score += 10;
                     document.getElementById('pts').innerText = score;
-                    say(item.r, next); // Pronuncia antes de pasar a la siguiente
+                    say(item.r, next); 
                 } else {
                     b.classList.add('wrong'); 
+                    // Mostrar cuál era la correcta antes de pasar
                     setTimeout(next, 1500);
                 }
             };
@@ -88,9 +105,8 @@
     function next() {
         idx++;
         if (idx >= data.length) {
-            // Reiniciar al completar todas las frases
             idx = 0;
-            alert("¡Buen trabajo! Has terminado las frases del video.");
+            alert("¡Excelente! Has repasado todas las oraciones nuevas.");
         }
         document.getElementById('bar').style.width = (idx / data.length * 100) + "%";
         load();
