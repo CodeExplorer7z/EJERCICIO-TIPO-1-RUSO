@@ -3,35 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRÁCTICA DE VOCABULARIO RUSO</title>
+    <title>PRÁCTICA DE RUSO - LISTAS PROFESIONAL</title>
     <style>
-        body { background: #1a1b1e; color: white; font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .card { background: #2d2e31; padding: 25px; border-radius: 20px; border: 1px solid #3f4043; width: 100%; max-width: 500px; text-align: center; }
-        .phrase { font-size: 1.4rem; font-weight: bold; color: #00d4ff; margin: 20px 0; line-height: 1.4; }
-        .btn-audio { background: #ffbd2e; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 1.5rem; margin-bottom: 20px; transition: transform 0.1s; }
-        .btn-audio:active { transform: scale(0.9); }
-        .options { display: grid; gap: 10px; }
-        .opt { background: #3f4043; border: 2px solid transparent; color: white; padding: 15px; border-radius: 12px; cursor: pointer; font-size: 0.95rem; transition: 0.2s; text-align: left; }
-        .opt:hover { background: #4a4b4e; }
-        .correct { background: #27c93f !important; border-color: #5ff97e !important; }
-        .wrong { background: #ff5f56 !important; border-color: #ff8e89 !important; }
-        .progress-container { background: #333; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
-        #bar { background: #27c93f; width: 0%; height: 100%; transition: 0.3s; }
-        #pts-container { margin-bottom: 10px; font-weight: bold; color: #ffbd2e; }
+        /* VARIABLES DE COLOR MODERNAS */
+        :root {
+            --bg-dark: #121212; /* Fondo casi negro */
+            --bg-card: #1e1e1e; /* Fondo de tarjetas gris muy oscuro */
+            --bg-item: #2a2a2a; /* Fondo de elementos gris oscuro */
+            --text-main: #e0e0e0; /* Texto principal blanco grisáceo */
+            --text-muted: #a0a0a0; /* Texto secundario gris */
+            
+            /* Colores de acento inspirados en Duolingo/Material Design */
+            --accent-blue: #3498db; 
+            --accent-yellow: #f1c40f; 
+            --accent-green: #2ecc71; 
+            --accent-red: #e74c3c;
+            
+            --border-color: #333333;
+            --shadow-card: 0 10px 20px rgba(0,0,0,0.5);
+            --transition-fast: 0.2s ease;
+        }
+
+        /* ESTILOS GLOBALES */
+        body { 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fuente más moderna */
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box;
+        }
+
+        /* --- ESTILOS DEL MENÚ MEJORADO --- */
+        .menu-container { 
+            width: 100%; 
+            max-width: 600px; /* Un poco más ancho para el nuevo diseño */
+            text-align: center; 
+        }
+
+        .menu-header {
+            margin-bottom: 50px;
+        }
+
+        .menu-title { 
+            color: var(--accent-yellow); 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .menu-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Rejilla responsiva */
+            gap: 25px;
+        }
+
+        /* DISEÑO DE BOTÓN DE LISTA PREMIUM */
+        .list-button {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Alinear contenido a la izquierda */
+            background: var(--bg-card);
+            color: var(--text-main);
+            padding: 25px;
+            border-radius: 20px; /* Bordes muy redondeados */
+            border: 2px solid var(--border-color); /* Borde sutil por defecto */
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        /* Efectos Hover */
+        .list-button:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px); /* Pequeña elevación */
+            box-shadow: 0 8px 15px rgba(52, 152, 219, 0.3); /* Sombra azulona */
+            background: #252525;
+        }
+
+        .list-button:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+        }
+
+        /* Icono visual para cada lista (simulado con CSS) */
+        .list-icon {
+            font-size: 2rem;
+            margin-right: 20px;
+            color: var(--accent-blue);
+            background: rgba(52, 152, 219, 0.1);
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+        .list-info {
+            text-align: left;
+        }
+
+        .list-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .list-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: block;
+            margin-top: 5px;
+        }
+
+        /* --- ESTILOS DEL JUEGO (Se mantienen elegantes) --- */
+        .card { 
+            background: var(--bg-card); 
+            padding: 30px; 
+            border-radius: 25px; 
+            border: 1px solid var(--border-color); 
+            width: 100%; 
+            max-width: 500px; 
+            text-align: center; 
+            box-shadow: var(--shadow-card);
+        }
+
+        .phrase { font-size: 1.6rem; font-weight: bold; color: var(--accent-blue); margin: 25px 0; line-height: 1.3; }
+        
+        .btn-audio { 
+            background: var(--accent-yellow); 
+            border: none; 
+            width: 65px; 
+            height: 65px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 1.8rem; 
+            margin-bottom: 25px; 
+            transition: var(--transition-fast); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            color: #333;
+        }
+        .btn-audio:hover { transform: scale(1.1); background: #f3d04d; }
+        .btn-audio:active { transform: scale(0.95); }
+
+        .options { display: grid; gap: 12px; }
+        .opt { 
+            background: var(--bg-item); 
+            border: 2px solid transparent; 
+            color: var(--text-main); 
+            padding: 18px; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            transition: var(--transition-fast); 
+            text-align: left; 
+            font-weight: 500;
+        }
+        .opt:hover:not(:disabled) { background: #383838; border-color: var(--text-muted); }
+        .opt:disabled { cursor: default; opacity: 0.7; }
+
+        .correct { background: var(--accent-green) !important; border-color: #a9f1c7 !important; color: #1a1a1a !important; font-weight: bold;}
+        .wrong { background: var(--accent-red) !important; border-color: #f5b0aa !important; color: #1a1a1a !important; font-weight: bold;}
+
+        .progress-container { background: #333; height: 12px; border-radius: 6px; margin-bottom: 25px; overflow: hidden; border: 1px solid #444; }
+        #bar { background: var(--accent-green); width: 0%; height: 100%; transition: 0.4s ease-out; }
+        #pts-container { margin-bottom: 15px; font-weight: bold; color: var(--accent-yellow); font-size: 1.1rem; }
+        
+        .header-game { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 500px; margin-bottom: 20px; }
+        .btn-back { 
+            background: var(--bg-item); 
+            color: var(--text-main); 
+            border: 1px solid var(--border-color); 
+            padding: 10px 20px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            transition: var(--transition-fast);
+            text-decoration: none;
+        }
+        .btn-back:hover { background: #383838; border-color: var(--text-muted); }
+        
+        /* Utilidad para ocultar secciones */
+        .hidden { display: none !important; }
+
+        /* Responsividad para móviles pequeños */
+        @media (max-width: 480px) {
+            .menu-title { font-size: 1.8rem; }
+            .list-grid { grid-template-columns: 1fr; }
+            .card { padding: 20px; }
+            .phrase { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <div class="progress-container"><div id="bar"></div></div>
-        <div id="pts-container">Pts: <span id="pts">0</span></div>
-        <p style="color: #888; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Traduce esta oración</p>
-        <div id="display" class="phrase">Cargando...</div>
-        <button class="btn-audio" onclick="say()">🔊</button>
-        <div id="btns" class="options"></div>
+
+    <div id="section-menu" class="menu-container">
+        <div class="menu-header">
+            <h1 class="menu-title">Mis Listas</h1>
+            <p class="menu-subtitle">Selecciona un set de oraciones para practicar</p>
+        </div>
+        <div id="menu-items" class="list-grid">
+            </div>
+    </div>
+
+    <div id="section-game" class="hidden" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+        <div class="header-game">
+            <button class="btn-back" onclick="showMenu()">⬅ Menú</button>
+            <span id="current-list-name" style="font-weight: bold; color: var(--accent-yellow); font-size: 1.2rem;">LISTA</span>
+        </div>
+        <div class="card">
+            <div class="progress-container"><div id="bar"></div></div>
+            <div id="pts-container">Puntos: <span id="pts">0</span></div>
+            <p style="color: var(--text-muted); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px;">Traduce esta oración</p>
+            <div id="display" class="phrase">Cargando...</div>
+            <button class="btn-audio" onclick="say()">🔊</button>
+            <div id="btns" class="options"></div>
+        </div>
     </div>
 
 <script>
-    // Datos actualizados con tus oraciones personalizadas
+    // BASE DE DATOS UNIFICADA (Tus 39 oraciones)
     const data = [
         { r: "Моя семья живёт в Лиме.", s: "Mi familia vive en Lima" },
         { r: "Твоя сестра учится в колледже?", s: "¿Tu hermana estudia en el colegio?" },
@@ -54,47 +262,113 @@
         { r: "У туриста сильный акцент.", s: "El turista tiene un acento fuerte" },
         { r: "Это была весёлая свадьба.", s: "Fue una boda divertida" },
         { r: "Этот старый отель — просто дыра.", s: "Este hotel viejo es simplemente un agujero" },
-        { r: "Эта музыка — полный отстой.", s: "Esta música es una basura total" }
+        { r: "Эта музыка — полный отстой.", s: "Esta música es una basura total" },
+        { r: "Привет, как тебя зовут?", s: "Hola, ¿cómo te llamas?" },
+        { r: "Я знаю это место.", s: "Yo conozco este lugar." },
+        { r: "Я думаю, это хорошая идея.", s: "Pienso que es una buena idea." },
+        { r: "Это очень длинное слово.", s: "Esta es una palabra muy larga." },
+        { r: "Подожди, я сейчас приду.", s: "Espera, ahora vengo." },
+        { r: "Давай пойдём в парк.", s: "Vamos al parque." },
+        { r: "Я всё понял, спасибо.", s: "Lo entendí todo, gracias." },
+        { r: "Короче, мы опоздали.", s: "En resumen, llegamos tarde." },
+        { r: "Кстати, где мой чай?", s: "Por cierto, ¿dónde está mi té?" },
+        { r: "Ладно, давай сделаем это.", s: "Está bien, hagámoslo." },
+        { r: "Ничего, всё нормально.", s: "No pasa nada, todo está normal." },
+        { r: "Осталось мало времени.", s: "Queda poco tiempo." },
+        { r: "Слышишь, что он говорит?", s: "¿Oyes lo que él dice?" },
+        { r: "Это платье выглядит прикольно.", s: "Este vestido se ve guay." },
+        { r: "Ясненько, я всё сделаю.", s: "Clarito, lo haré todo." },
+        { r: "Капец, как тут холодно!", s: "¡Vaya, qué frío hace aquí!" },
+        { r: "Блин, я забыл ключи.", s: "Rayos, olvidé las llaves." }
     ];
 
+    let currentSubset = [];
     let idx = 0, score = 0;
 
+    // LÓGICA DE NAVEGACIÓN
+    function showMenu() {
+        document.getElementById('section-menu').classList.remove('hidden');
+        document.getElementById('section-game').classList.add('hidden');
+        // Detener audio si se estaba reproduciendo al volver
+        window.speechSynthesis.cancel();
+        renderMenu();
+    }
+
+    function startList(num) {
+        const start = (num - 1) * 10;
+        currentSubset = data.slice(start, start + 10);
+        idx = 0;
+        score = 0;
+        document.getElementById('pts').innerText = "0";
+        document.getElementById('bar').style.width = "0%";
+        document.getElementById('current-list-name').innerText = `Set ${num}`;
+        
+        document.getElementById('section-menu').classList.add('hidden');
+        document.getElementById('section-game').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    // GENERACIÓN DEL MENÚ CON DISEÑO NUEVO
+    function renderMenu() {
+        const container = document.getElementById('menu-items');
+        container.innerHTML = "";
+        const totalLists = Math.ceil(data.length / 10);
+        
+        for(let i = 1; i <= totalLists; i++) {
+            const startIdx = (i - 1) * 10;
+            const endIdx = Math.min(startIdx + 10, data.length);
+            const numOraciones = endIdx - startIdx;
+
+            const btn = document.createElement('button');
+            btn.className = 'list-button';
+            btn.onclick = () => startList(i);
+
+            // Estructura interna del botón moderno
+            btn.innerHTML = `
+                <div class="list-icon">🇷🇺</div>
+                <div class="list-info">
+                    <span class="list-name">Lista ${i}</span>
+                    <span class="list-meta">${numOraciones} oraciones por repasar</span>
+                </div>
+            `;
+            
+            container.appendChild(btn);
+        }
+    }
+
+    // LÓGICA DEL JUEGO (Mantenida)
     function say(text = null, cb = null) {
-        const t = text || data[idx].r;
+        const t = text || currentSubset[idx].r;
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(t);
-        u.lang = 'ru-RU'; 
-        u.rate = 0.8; 
+        u.lang = 'ru-RU'; u.rate = 0.8;
         if(cb) u.onend = () => setTimeout(cb, 1000);
         window.speechSynthesis.speak(u);
     }
 
-    function load() {
-        const item = data[idx];
+    function loadQuestion() {
+        const item = currentSubset[idx];
         document.getElementById('display').innerText = item.r;
         
-        // Generar opciones (la correcta + 2 aleatorias)
-        const otherOptions = data.filter(x => x.s !== item.s).map(x => x.s);
-        const shuffledOthers = otherOptions.sort(() => Math.random() - 0.5).slice(0, 2);
-        const opts = [item.s, ...shuffledOthers].sort(() => Math.random() - 0.5);
+        // Mezclar opciones usando toda la base de datos para los errores
+        const others = data.filter(x => x.s !== item.s).map(x => x.s);
+        const randomOthers = others.sort(() => Math.random() - 0.5).slice(0, 2);
+        const opts = [item.s, ...randomOthers].sort(() => Math.random() - 0.5);
 
         const div = document.getElementById('btns');
         div.innerHTML = "";
-        
         opts.forEach(o => {
             const b = document.createElement('button');
-            b.className = 'opt'; 
-            b.innerText = o;
+            b.className = 'opt'; b.innerText = o;
             b.onclick = () => {
                 document.querySelectorAll('.opt').forEach(x => x.disabled = true);
                 if(o === item.s) {
-                    b.classList.add('correct'); 
+                    b.classList.add('correct');
                     score += 10;
                     document.getElementById('pts').innerText = score;
-                    say(item.r, next); 
+                    say(item.r, next);
                 } else {
-                    b.classList.add('wrong'); 
-                    // Mostrar cuál era la correcta antes de pasar
+                    b.classList.add('wrong');
                     setTimeout(next, 1500);
                 }
             };
@@ -104,15 +378,17 @@
 
     function next() {
         idx++;
-        if (idx >= data.length) {
-            idx = 0;
-            alert("¡Excelente! Has repasado todas las oraciones nuevas.");
+        if (idx >= currentSubset.length) {
+            alert("¡Felicidades! Completaste este set de oraciones.");
+            showMenu();
+            return;
         }
-        document.getElementById('bar').style.width = (idx / data.length * 100) + "%";
-        load();
+        document.getElementById('bar').style.width = (idx / currentSubset.length * 100) + "%";
+        loadQuestion();
     }
 
-    window.onload = load;
+    // Iniciar mostrando el menú
+    window.onload = showMenu;
 </script>
 </body>
 </html>
