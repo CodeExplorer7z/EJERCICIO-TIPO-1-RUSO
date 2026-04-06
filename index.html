@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRÁCTICA DE RUSO - EXPERIENCIA DUO</title>
+    <title>Hellotalk: Russian Phrases</title>
     <style>
         :root {
             --bg-dark: #121212; 
@@ -15,17 +15,96 @@
             --accent-green: #2ecc71; 
             --accent-red: #e74c3c;
             --border-color: #333333;
+            --max-web-width: 600px; /* Ancho más compacto para centrar */
         }
 
         body { 
             background: var(--bg-dark); 
             color: var(--text-main); 
             font-family: 'Segoe UI', sans-serif; 
-            display: flex; flex-direction: column; align-items: center; 
-            min-height: 100vh; margin: 0; padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px; 
+            box-sizing: border-box;
         }
 
-        .progress-wrapper { width: 100%; max-width: 450px; background: #333; height: 12px; border-radius: 10px; margin-bottom: 20px; overflow: hidden; border: 1px solid #444; }
+        .main-wrapper {
+            width: 100%;
+            max-width: var(--max-web-width);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* TÍTULO ACTUALIZADO */
+        .main-title {
+            color: var(--accent-yellow);
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* BUSCADOR ESTILO YOUGLISH */
+        .search-wrapper {
+            width: 100%;
+            margin: 15px 0 25px 0;
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .search-wrapper input {
+            flex: 1;
+            border: none;
+            padding: 14px 18px;
+            font-size: 1rem;
+            outline: none;
+            color: #333;
+        }
+
+        .btn-search {
+            background: #c01c1c;
+            color: white;
+            border: none;
+            padding: 0 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn-search:hover { background: #e74c3c; }
+
+        .search-results {
+            width: 100%;
+            margin-bottom: 20px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 5px;
+            border: 1px solid var(--accent-blue);
+            box-sizing: border-box;
+        }
+
+        .result-item {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        .result-item:last-child { border-bottom: none; }
+        .result-item:hover { background: var(--bg-item); }
+        .res-ru { color: var(--accent-yellow); font-weight: bold; display: block; font-size: 1.1rem; }
+        .res-es { color: var(--text-main); font-size: 0.95rem; opacity: 0.8; }
+
+        /* INTERFAZ DE JUEGO Y MENÚ */
+        .progress-wrapper { width: 100%; background: #333; height: 12px; border-radius: 10px; margin-bottom: 25px; overflow: hidden; border: 1px solid #444; }
         #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent-green), #a2ffcf); transition: width 0.5s ease; }
 
         .btn-exit {
@@ -35,76 +114,80 @@
         }
         .btn-exit:hover { background: var(--accent-red); color: white; }
 
-        .menu-container { width: 100%; max-width: 800px; text-align: center; }
-        .list-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px; }
+        .menu-container { width: 100%; text-align: center; }
+        .list-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; width: 100%; }
         
         .list-button {
-            background: var(--bg-card); color: var(--text-main); padding: 15px; border-radius: 15px; 
+            background: var(--bg-card); color: var(--text-main); padding: 20px; border-radius: 20px; 
             border: 2px solid var(--border-color); cursor: pointer; transition: 0.3s;
+            display: flex; flex-direction: column; align-items: center;
         }
-        .list-button:hover { border-color: var(--accent-blue); transform: translateY(-3px); }
+        .list-button:hover { border-color: var(--accent-blue); transform: translateY(-3px); background: #252525; }
 
         .card { 
-            background: var(--bg-card); padding: 30px; border-radius: 25px; 
-            border: 1px solid var(--border-color); width: 100%; max-width: 450px; 
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            background: var(--bg-card); padding: 35px; border-radius: 30px; 
+            border: 1px solid var(--border-color); width: 100%; 
+            box-sizing: border-box; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
-        .phrase { font-size: 1.7rem; font-weight: bold; color: var(--accent-blue); margin: 20px 0; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-        
-        .btn-audio { 
-            background: var(--accent-yellow); border: none; width: 65px; height: 65px; 
-            border-radius: 50%; cursor: pointer; font-size: 1.8rem; margin-bottom: 25px; 
-            box-shadow: 0 5px 0 #c4a00a; transition: 0.1s;
-        }
+        .phrase { font-size: 1.8rem; font-weight: bold; color: var(--accent-blue); margin: 25px 0; min-height: 100px; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
+        .btn-audio { background: var(--accent-yellow); border: none; width: 70px; height: 70px; border-radius: 50%; cursor: pointer; font-size: 2rem; margin-bottom: 30px; box-shadow: 0 6px 0 #c4a00a; transition: 0.1s; }
         .btn-audio:active { transform: translateY(4px); box-shadow: none; }
 
-        .options { display: grid; gap: 12px; }
-        .opt { 
-            background: var(--bg-item); border: 2px solid transparent; color: var(--text-main); 
-            padding: 16px; border-radius: 15px; cursor: pointer; font-size: 1.05rem; transition: 0.2s; text-align: left;
-        }
+        .options { display: grid; gap: 14px; }
+        .opt { background: var(--bg-item); border: 2px solid transparent; color: var(--text-main); padding: 18px; border-radius: 18px; cursor: pointer; font-size: 1.1rem; transition: 0.2s; text-align: left; }
         
-        .feedback-area { height: 30px; margin-top: 15px; font-weight: bold; font-size: 1.1rem; }
+        .feedback-area { height: 35px; margin-top: 20px; font-weight: bold; font-size: 1.2rem; }
         .msg-error { color: var(--accent-red); animation: shake 0.4s; }
         .msg-correct { color: var(--accent-green); }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-8px); }
-            75% { transform: translateX(8px); }
-        }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
 
         .correct { background: var(--accent-green) !important; color: #1a1a1a !important; font-weight: bold; }
         .wrong { background: var(--accent-red) !important; color: white !important; font-weight: bold; }
 
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 100; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.96); display: flex; justify-content: center; align-items: center; z-index: 100; }
         .modal-content { background: var(--bg-card); padding: 40px; border-radius: 30px; max-width: 420px; width: 90%; text-align: center; border: 2px solid var(--accent-blue); }
-        .error-list { text-align: left; margin: 20px 0; max-height: 250px; overflow-y: auto; background: #121212; padding: 15px; border-radius: 15px; }
-        .error-item { padding: 10px 0; border-bottom: 1px solid #333; }
+        .error-list { text-align: left; margin: 15px 0; max-height: 250px; overflow-y: auto; background: #121212; padding: 15px; border-radius: 15px; }
 
         .hidden { display: none !important; }
+
+        @media (max-width: 500px) {
+            .list-grid { grid-template-columns: 1fr; }
+            .phrase { font-size: 1.5rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="section-menu" class="menu-container">
-        <h1 style="color: var(--accent-yellow); font-size: 2.8rem; margin-bottom: 5px;">РУССКИЙ</h1>
-        <p style="color: var(--accent-blue); font-weight: bold;">SISTEMA DE APRENDIZAJE</p>
-        <div id="menu-items" class="list-grid"></div>
-    </div>
+    <div class="main-wrapper">
+        <div id="section-menu" class="menu-container">
+            <h1 class="main-title">Hellotalk: Russian Phrases and Spanish Translations</h1>
+            
+            <div class="search-wrapper">
+                <input type="text" id="search-input" placeholder="Buscar frase o palabra..." onkeydown="if(event.key==='Enter') searchPhrases()">
+                <button class="btn-search" onclick="searchPhrases()">SEARCH</button>
+            </div>
 
-    <div id="section-game" class="hidden">
-        <div class="progress-wrapper"><div id="progress-bar"></div></div>
-        <div style="width: 100%; max-width: 450px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-            <button class="btn-exit" onclick="showMenu()">✕ Salir</button>
-            <span id="current-list-name" style="font-weight: bold; color: var(--text-muted);"></span>
+            <div id="search-results-box" class="search-results hidden"></div>
+
+            <p style="color: var(--accent-blue); font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; font-size: 0.9rem;">Sistema de Aprendizaje</p>
+            
+            <div id="menu-items" class="list-grid"></div>
         </div>
-        <div class="card">
-            <div id="display" class="phrase">---</div>
-            <button class="btn-audio" onclick="say()">🔊</button>
-            <div id="btns" class="options"></div>
-            <div id="feedback-text" class="feedback-area"></div>
+
+        <div id="section-game" class="hidden" style="width: 100%;">
+            <div class="progress-wrapper"><div id="progress-bar"></div></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <button class="btn-exit" onclick="showMenu()">✕ Salir</button>
+                <span id="current-list-name" style="font-weight: bold; color: var(--text-muted);"></span>
+            </div>
+            <div class="card">
+                <div id="display" class="phrase">---</div>
+                <button class="btn-audio" onclick="say()">🔊</button>
+                <div id="btns" class="options"></div>
+                <div id="feedback-text" class="feedback-area"></div>
+            </div>
         </div>
     </div>
 
@@ -113,7 +196,7 @@
             <h2 id="result-title" style="color: var(--accent-yellow);">¡Sesión Finalizada!</h2>
             <p id="result-stat" style="font-size: 1.3rem; margin: 15px 0;"></p>
             <div id="error-container" class="hidden">
-                <p style="color: var(--accent-red); font-weight: bold;">Repasar errores:</p>
+                <p style="color: var(--accent-red); font-weight: bold; text-transform: uppercase; font-size: 0.8rem;">Repasar errores:</p>
                 <div id="error-list" class="error-list"></div>
             </div>
             <button onclick="showMenu()" style="background: var(--accent-blue); color: white; border: none; padding: 18px; border-radius: 15px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 20px;">CONTINUAR</button>
@@ -121,10 +204,11 @@
     </div>
 
 <script>
+    // Tu base de datos de 20 frases
     const data = [
         { r: "Привет, как тебя зовут?", s: "¿Hola, cómo te llamas?" },
-        { r: "Я знаю esto место.", s: "Yo conozco este lugar." },
-        { r: "Я думаю, это хорошая идея.", s: "Pienso que es una buena idea." },
+        { r: "Я знаю это место.", s: "Yo conozco este lugar." },
+        { r: "Я думаю, это хорошая idea.", s: "Pienso que es una buena idea." },
         { r: "Это длинное слово.", s: "Esta es una palabra muy larga." },
         { r: "Подожди, я сейчас приду.", s: "Espera, ahora vengo." },
         { r: "Давай пойдём в парк.", s: "Vamos al parque." },
@@ -149,51 +233,55 @@
     let errors = [];
     let audioCtx = null;
 
-    function initAudio() {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+
+    function searchPhrases() {
+        const query = document.getElementById('search-input').value.toLowerCase().trim();
+        const resultsBox = document.getElementById('search-results-box');
+        if (query === "") { resultsBox.classList.add('hidden'); return; }
+        const filtered = data.filter(item => item.r.toLowerCase().includes(query) || item.s.toLowerCase().includes(query));
+        if (filtered.length > 0) {
+            resultsBox.classList.remove('hidden');
+            resultsBox.innerHTML = filtered.map(item => `<div class="result-item" onclick="playSearchAudio('${item.r}')"><span class="res-ru">${item.r}</span><span class="res-es">${item.s}</span></div>`).join("");
+        } else {
+            resultsBox.classList.remove('hidden');
+            resultsBox.innerHTML = "<p style='padding:15px; color:gray;'>No se encontraron coincidencias.</p>";
+        }
+    }
+
+    function playSearchAudio(text) {
+        initAudio();
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text); u.lang = 'ru-RU'; u.rate = 0.8;
+        window.speechSynthesis.speak(u);
     }
 
     function playDing() {
         initAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(1046.50, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+        osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.4);
     }
 
     function playError() {
         initAudio();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.2);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-        osc.connect(gain); gain.connect(audioCtx.destination);
+        const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+        osc.type = 'sawtooth'; osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime); osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start(); osc.stop(audioCtx.currentTime + 0.2);
     }
 
-    // SONIDO FINAL (Basado en el video de Duolingo)
     function playFinalSuccess() {
         initAudio();
-        const tones = [523.25, 659.25, 783.99, 1046.50]; // Acorde de Do Mayor (C Major)
-        tones.forEach((freq, i) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (i * 0.05));
-            gain.gain.setValueAtTime(0, audioCtx.currentTime + (i * 0.05));
-            gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + (i * 0.05) + 0.02);
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+            osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + (i * 0.05));
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime + (i * 0.05));
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.5);
             osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(audioCtx.currentTime + (i * 0.05));
-            osc.stop(audioCtx.currentTime + 1.5);
+            osc.start(audioCtx.currentTime + (i * 0.05)); osc.stop(audioCtx.currentTime + 1.5);
         });
     }
 
@@ -201,6 +289,8 @@
         document.getElementById('section-menu').classList.remove('hidden');
         document.getElementById('section-game').classList.add('hidden');
         document.getElementById('modal-results').classList.add('hidden');
+        document.getElementById('search-input').value = "";
+        document.getElementById('search-results-box').classList.add('hidden');
         renderMenu();
     }
 
@@ -211,7 +301,7 @@
             const btn = document.createElement('button');
             btn.className = 'list-button';
             btn.onclick = () => startList(i);
-            btn.innerHTML = `🇷🇺 <b>BLOQUE ${i}</b><br><small>Frases 1 a 10</small>`;
+            btn.innerHTML = `🇷🇺 <b>BLOQUE ${i}</b><small style="margin-top:5px; opacity:0.7;">Frases 1 a 10</small>`;
             container.appendChild(btn);
         }
     }
@@ -225,10 +315,6 @@
         loadQuestion();
     }
 
-    function updateProgressBar() {
-        document.getElementById('progress-bar').style.width = (idx / currentSubset.length * 100) + "%";
-    }
-
     function say(cb = null) {
         const item = currentSubset[idx];
         const a = new Audio(`audios/audio_${data.indexOf(item)}.mp3`);
@@ -236,39 +322,30 @@
     }
 
     function fallbackTTS(text, cb) {
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'ru-RU'; u.rate = 0.8;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text); u.lang = 'ru-RU'; u.rate = 0.8;
         if(cb) u.onend = cb; window.speechSynthesis.speak(u);
     }
 
     function loadQuestion() {
-        updateProgressBar();
+        document.getElementById('progress-bar').style.width = (idx / currentSubset.length * 100) + "%";
         const item = currentSubset[idx];
-        const feedback = document.getElementById('feedback-text');
-        feedback.innerHTML = "";
+        document.getElementById('feedback-text').innerHTML = "";
         document.getElementById('display').innerText = item.r;
-        
         const others = data.filter(x => x.s !== item.s).sort(() => Math.random() - 0.5).slice(0, 2);
         const opts = [item.s, ...others.map(o => o.s)].sort(() => Math.random() - 0.5);
-
         const div = document.getElementById('btns');
         div.innerHTML = "";
         opts.forEach(o => {
-            const b = document.createElement('button');
-            b.className = 'opt'; b.innerText = o;
+            const b = document.createElement('button'); b.className = 'opt'; b.innerText = o;
             b.onclick = () => {
                 document.querySelectorAll('.opt').forEach(btn => btn.disabled = true);
                 if(o === item.s) {
-                    b.classList.add('correct');
-                    feedback.innerHTML = `<span class="msg-correct">✓ ¡Excelente!</span>`;
-                    playDing();
-                    setTimeout(next, 1000);
+                    b.classList.add('correct'); document.getElementById('feedback-text').innerHTML = `<span class="msg-correct">✓ ¡Muy bien!</span>`;
+                    playDing(); setTimeout(next, 1000);
                 } else {
-                    b.classList.add('wrong');
-                    feedback.innerHTML = `<span class="msg-error">✕ Incorrecto</span>`;
-                    playError();
-                    errors.push(item);
-                    setTimeout(next, 1600);
+                    b.classList.add('wrong'); document.getElementById('feedback-text').innerHTML = `<span class="msg-error">✕ Incorrecto</span>`;
+                    playError(); errors.push(item); setTimeout(next, 1600);
                 }
             };
             div.appendChild(b);
@@ -277,23 +354,18 @@
 
     function next() {
         idx++;
-        if (idx >= currentSubset.length) { 
-            updateProgressBar(); 
-            playFinalSuccess(); // Sonido de lección terminada
-            setTimeout(showResults, 400); 
-        }
+        if (idx >= currentSubset.length) { document.getElementById('progress-bar').style.width = "100%"; playFinalSuccess(); setTimeout(showResults, 400); }
         else loadQuestion();
     }
 
     function showResults() {
         document.getElementById('modal-results').classList.remove('hidden');
         document.getElementById('result-stat').innerText = `Lograste ${currentSubset.length - errors.length} de ${currentSubset.length} aciertos`;
-        const container = document.getElementById('error-container');
         if(errors.length > 0) {
-            container.classList.remove('hidden');
+            document.getElementById('error-container').classList.remove('hidden');
             document.getElementById('error-list').innerHTML = errors.map(e => `<div class="error-item">🇷🇺 <b>${e.r}</b><br>🇪🇸 ${e.s}</div>`).join("");
         } else {
-            container.classList.add('hidden');
+            document.getElementById('error-container').classList.add('hidden');
             document.getElementById('result-title').innerText = "¡Puntuación Perfecta! 🏆";
         }
     }
