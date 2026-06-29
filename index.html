@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hellotalk: Russian Phrases</title>
+    <title>Tutor Ruso: Vocabulario Base</title>
     <style>
         :root {
             --bg-dark: #0f172a; 
@@ -45,7 +45,6 @@
             font-weight: 800;
         }
 
-        /* BUSCADOR */
         .search-wrapper {
             width: 100%;
             margin: 0 0 25px 0;
@@ -79,7 +78,6 @@
         .res-ru { color: var(--accent-yellow); font-weight: bold; display: block; }
         .res-es { color: var(--text-muted); font-size: 0.85rem; }
 
-        /* JUEGO */
         .progress-wrapper { 
             width: 100%; background: var(--bg-item); height: 8px; 
             border-radius: 10px; margin-bottom: 20px; overflow: hidden; 
@@ -151,16 +149,16 @@
 
     <div class="main-wrapper">
         <div id="section-menu">
-            <h1 class="main-title">Russian Phrases</h1>
+            <h1 class="main-title">Tutor de Ruso</h1>
             
             <div class="search-wrapper">
-                <input type="text" id="search-input" placeholder="Buscar frase..." oninput="searchPhrases()">
+                <input type="text" id="search-input" placeholder="Buscar vocabulario..." oninput="searchPhrases()">
                 <button class="btn-search" onclick="searchPhrases()">BUSCAR</button>
             </div>
 
             <div id="search-results-box" class="search-results hidden"></div>
 
-            <p style="color: var(--accent-blue); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 15px;">Bloques de estudio</p>
+            <p style="color: var(--accent-blue); font-weight: bold; font-size: 0.75rem; text-transform: uppercase; margin-bottom: 15px;">Bloques de estudio móvil</p>
             <div id="menu-items" class="list-grid"></div>
         </div>
 
@@ -184,7 +182,7 @@
             <h2 id="result-title" style="color: var(--accent-yellow); margin-top: 0;">¡Sesión Lista!</h2>
             <p id="result-stat" style="font-size: 1.1rem; color: var(--text-main);"></p>
             <div id="error-container" class="hidden">
-                <p style="color: var(--accent-red); font-size: 0.7rem; font-weight: bold; text-align: left; margin-bottom: 5px;">REPASAR:</p>
+                <p style="color: var(--accent-red); font-size: 0.7rem; font-weight: bold; text-align: left; margin-bottom: 5px;">REPASAR TERMINACIONES:</p>
                 <div id="error-list" class="error-list"></div>
             </div>
             <button onclick="showMenu()" style="background: var(--accent-blue); color: #0f172a; border: none; padding: 14px; border-radius: 12px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px;">VOLVER</button>
@@ -193,33 +191,49 @@
 
 <script>
     const data = [
-        { r: "Привет, как тебя зовут?", s: "¿Hola, cómo te llamas?" },
-        { r: "Я знаю это место.", s: "Yo conozco este lugar." },
-        { r: "Я думаю, это хорошая idea.", s: "Pienso que es una buena idea." },
-        { r: "Это длинное слово.", s: "Esta es una palabra muy larga." },
-        { r: "Подожди, я сейчас приду.", s: "Espera, ahora vengo." },
-        { r: "Давай пойдём в парк.", s: "Vamos al parque." },
-        { r: "Я всё понял, спасибо.", s: "Lo entendí todo, gracias." },
-        { r: "Короче, мы опоздали.", s: "En fin, llegamos tarde." },
-        { r: "Кстати, где мой чай?", s: "Por cierto, ¿dónde está mi té?" },
-        { r: "Ладно, давай сделаем это.", s: "Está bien, hagámoslo." },
-        { r: "Ничего, всё нормально.", s: "No es nada, todo bien." },
-        { r: "Осталось мало времени.", s: "Queda poco tiempo." },
-        { r: "Слышишь, что он говорит?", s: "¿Oyes lo que él dice?" },
-        { r: "Тебе очень идёт это платье!", s: "¡Te queda muy bien ese vestido!" },
-        { r: "Ясненько, я всё сделаю.", s: "Vale, yo me encargo de todo." },
-        { r: "Капец, как тут холодно!", s: "¡Vaya, qué frío hace aquí!" },
-        { r: "Блин, я забыл ключи.", s: "Rayos, olvidé las llaves." },
-        { r: "Как дела?", s: "¿Cómo estás?" },
-        { r: "Лучше всех", s: "Mejor que todos." },
-        { r: "Всё пучком", s: "Todo va de maravilla." }
+        // --- PRONOMBRES Y POSESIVOS ---
+        { r: "Я", s: "Yo" },
+        { r: "Ты", s: "Tú" },
+        { r: "Он", s: "Él" },
+        { r: "Она", s: "Ella" },
+        { r: "Мы", s: "Nosotros" },
+        { r: "Они", s: "Ellos" },
+        { r: "Мой дом", s: "Mi casa" },
+        { r: "Твой друг", s: "Tu amigo" },
+        { r: "Наш сын", s: "Nuestro hijo" },
+
+        // --- SUSTANTIVOS: FAMILIA ---
+        { r: "Мама", s: "Mamá" },
+        { r: "Папа", s: "Papá" },
+        { r: "Сын", s: "Hijo" },
+        { r: "Дочь", s: "Hija" },
+        { r: "Брат", s: "Hermano" },
+        { r: "Сестра", s: "Hermana" },
+        { r: "Муж", s: "Esposo" },
+        { r: "Жена", s: "Esposa" },
+        { r: "Друг", s: "Amigo" },
+        { r: "Подруga", s: "Amiga" },
+
+        // --- SUSTANTIVOS: LUGARES Y OBJETOS ---
+        { r: "Город", s: "Ciudad" },
+        { r: "Дом", s: "Casa" },
+        { r: "Здание", s: "Edificio" },
+        { r: "Книга", s: "Libro" },
+        { r: "Ручка", s: "Bolígrafo" },
+        { r: "Карандаш", s: "Lápiz" },
+
+        // --- FRASES CORTAS ---
+        { r: "Привет", s: "Hola" },
+        { r: "Да, я знаю", s: "Sí, yo sé" },
+        { r: "Нет, яね знаю", s: "No, yo no sé" },
+        { r: "Я понял", s: "Entendí" }
     ];
 
     let currentSubset = [];
     let idx = 0;
     let errors = [];
     let audioCtx = null;
-    let autoPlayTimer = null; // Guardamos el timer para poder cancelarlo
+    let autoPlayTimer = null;
 
     function initAudio() { if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
 
@@ -231,7 +245,7 @@
         if (filtered.length > 0) {
             resultsBox.classList.remove('hidden');
             resultsBox.innerHTML = filtered.map(item => `<div class="result-item" onclick="playSearchAudio('${item.r}')"><span class="res-ru">${item.r}</span><span class="res-es">${item.s}</span></div>`).join("");
-        } else { resultsBox.innerHTML = "<p style='padding:15px; color:gray; font-size:0.8rem;'>Sin coincidencias.</p>"; }
+        } else { resultsBox.innerHTML = "<p style='padding:15px; color:gray; font-size:0.8rem;'>Sin coincidencia.</p>"; }
     }
 
     function playSearchAudio(text) {
@@ -258,8 +272,8 @@
     }
 
     function showMenu() {
-        clearTimeout(autoPlayTimer); // Detenemos el timer de 2 segundos
-        window.speechSynthesis.cancel(); // Detenemos el habla
+        clearTimeout(autoPlayTimer);
+        window.speechSynthesis.cancel();
         document.getElementById('section-menu').classList.remove('hidden');
         document.getElementById('section-game').classList.add('hidden');
         document.getElementById('modal-results').classList.add('hidden');
@@ -273,8 +287,8 @@
             const btn = document.createElement('button');
             btn.className = 'list-button';
             btn.onclick = () => startList(i);
-            btn.innerHTML = `<div style="font-size:0.7rem; color:var(--accent-blue); font-weight:bold;">PACK ${i}</div>
-                             <div style="font-weight:bold; margin-top:4px;">Frases ${(i*10)-9}-${i*10}</div>`;
+            btn.innerHTML = `<div style="font-size:0.7rem; color:var(--accent-blue); font-weight:bold;">TANDA ${i}</div>
+                             <div style="font-weight:bold; margin-top:4px;">Palabras ${(i*10)-9}-${Math.min(i*10, data.length)}</div>`;
             container.appendChild(btn);
         }
     }
@@ -282,7 +296,7 @@
     function startList(num) {
         currentSubset = data.slice((num-1)*10, num*10);
         idx = 0; errors = [];
-        document.getElementById('current-list-name').innerText = `BLOQUE ${num}`;
+        document.getElementById('current-list-name').innerText = `BLOQUE PRÁCTICO ${num}`;
         document.getElementById('section-menu').classList.add('hidden');
         document.getElementById('section-game').classList.remove('hidden');
         loadQuestion();
@@ -300,7 +314,7 @@
     }
 
     function loadQuestion() {
-        clearTimeout(autoPlayTimer); // Limpiamos cualquier timer previo
+        clearTimeout(autoPlayTimer);
         document.getElementById('progress-bar').style.width = (idx / currentSubset.length * 100) + "%";
         const item = currentSubset[idx];
         document.getElementById('feedback-text').innerText = "";
@@ -314,7 +328,7 @@
         opts.forEach(o => {
             const b = document.createElement('button'); b.className = 'opt'; b.innerText = o;
             b.onclick = () => {
-                clearTimeout(autoPlayTimer); // Si el usuario responde, cancelamos el auto-play
+                clearTimeout(autoPlayTimer);
                 window.speechSynthesis.cancel();
                 document.querySelectorAll('.opt').forEach(btn => btn.disabled = true);
                 if(o === item.s) {
@@ -326,12 +340,11 @@
             div.appendChild(b);
         });
 
-        // REPRODUCCIÓN AUTOMÁTICA A LOS 2 SEGUNDOS
         autoPlayTimer = setTimeout(() => {
             if (!document.getElementById('section-game').classList.contains('hidden')) {
                 say();
             }
-        }, 2000);
+        }, 1500);
     }
 
     function next() {
@@ -345,10 +358,10 @@
         document.getElementById('result-stat').innerText = `Aciertos: ${currentSubset.length - errors.length} / ${currentSubset.length}`;
         if(errors.length > 0) {
             document.getElementById('error-container').classList.remove('hidden');
-            document.getElementById('error-list').innerHTML = errors.map(e => `<div class="error-item"><span style="color:var(--accent-yellow)">${e.r}</span><br><span style="color:var(--text-muted)">${e.s}</span></div>`).join("");
+            document.getElementById('error-list').innerHTML = errors.map(e => `<div class="error-item"><span style="color:var(--accent-yellow)">${e.r}</span> ➔ <span style="color:var(--text-muted)">${e.s}</span></div>`).join("");
         } else {
             document.getElementById('error-container').classList.add('hidden');
-            document.getElementById('result-title').innerText = "¡Puntuación Perfecta! 🏆";
+            document.getElementById('result-title').innerText = "¡Perfecto! 🏆";
         }
     }
 
